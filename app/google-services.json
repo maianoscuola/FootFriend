@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "101685718122",
+    "project_id": "footfriend-bb6e3",
+    "storage_bucket": "footfriend-bb6e3.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:101685718122:android:7854ea1626e44b16dd6e13",
+        "android_client_info": {
+          "package_name": "com.example.footfriend"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDGxRrwKLoN84Dck-0hjf9qhYjOBFbgurY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
