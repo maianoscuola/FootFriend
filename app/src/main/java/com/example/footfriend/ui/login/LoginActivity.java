@@ -12,10 +12,13 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.footfriend.CompleteProfileActivity;
 import com.example.footfriend.MainActivity;
 import com.example.footfriend.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -23,6 +26,7 @@ public class LoginActivity extends AppCompatActivity {
     private Button loginButton;
     private ProgressBar loadingProgressBar;
     private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,14 +34,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         mAuth = FirebaseAuth.getInstance();
-
-        // Se l'utente è già loggato, vai direttamente alla MainActivity
-        /*FirebaseUser currentUser = mAuth.getCurrentUser();
-        if (currentUser != null) {
-            startActivity(new Intent(this, MainActivity.class));
-            finish();
-            return;
-        }*/
+        db = FirebaseFirestore.getInstance();
 
         usernameEditText = findViewById(R.id.username);
         passwordEditText = findViewById(R.id.password);
@@ -70,22 +67,24 @@ public class LoginActivity extends AppCompatActivity {
 
             loadingProgressBar.setVisibility(View.VISIBLE);
 
-            // Prova ad effettuare il login
             mAuth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener(this, task -> {
                         if (task.isSuccessful()) {
-                            // Login riuscito
-                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                            finish();
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            if (user != null) {
+                                checkIfProfileIsComplete(user.getUid());
+                            }
                         } else {
-                            // Se fallisce, prova a registrare il nuovo utente
                             mAuth.createUserWithEmailAndPassword(email, password)
                                     .addOnCompleteListener(this, registerTask -> {
                                         loadingProgressBar.setVisibility(View.GONE);
                                         if (registerTask.isSuccessful()) {
                                             Toast.makeText(this, "Registrazione completata!", Toast.LENGTH_SHORT).show();
-                                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                                            finish();
+                                            FirebaseUser newUser = mAuth.getCurrentUser();
+                                            if (newUser != null) {
+                                                startActivity(new Intent(LoginActivity.this, CompleteProfileActivity.class));
+                                                finish();
+                                            }
                                         } else {
                                             Toast.makeText(this, "Errore: " + registerTask.getException().getMessage(), Toast.LENGTH_SHORT).show();
                                         }
@@ -94,6 +93,28 @@ public class LoginActivity extends AppCompatActivity {
                     });
         });
     }
+
+    private void checkIfProfileIsComplete(String userId) {
+        db.collection("users").document(userId).get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    loadingProgressBar.setVisibility(View.GONE);
+                    if (documentSnapshot.exists() &&
+                            documentSnapshot.contains("nickname") &&
+                            documentSnapshot.contains("ruolo") &&
+                            documentSnapshot.contains("eta")) {
+
+                        startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                    } else {
+                        startActivity(new Intent(LoginActivity.this, CompleteProfileActivity.class));
+                    }
+                    finish();
+                })
+                .addOnFailureListener(e -> {
+                    loadingProgressBar.setVisibility(View.GONE);
+                    Toast.makeText(LoginActivity.this, "Errore nel controllo del profilo: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+    }
 }
+
 
 
