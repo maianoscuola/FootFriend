@@ -2,7 +2,7 @@
   "project_info": {
     "project_number": "101685718122",
     "project_id": "footfriend-bb6e3",
-    "storage_bucket": "footfriend-bb6e3.firebasestorage.app"
+    "storage_bucket": "https://footfriend-bb6e3-default-rtdb.europe-west1.firebasedatabase.app/users"
   },
   "client": [
     {
