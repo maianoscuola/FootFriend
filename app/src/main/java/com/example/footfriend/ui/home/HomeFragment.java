@@ -50,7 +50,7 @@ public class HomeFragment extends Fragment {
                             String ruolo = documentSnapshot.getString("ruolo");
                             Long exp = documentSnapshot.getLong("exp");
 
-                            
+
                             if (nickname != null) {
                                 textViewNome.setText(nickname);
                             } else {
