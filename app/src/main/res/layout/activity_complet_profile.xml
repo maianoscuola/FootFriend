@@ -6,7 +6,13 @@
     android:layout_height="match_parent"
     android:padding="24dp">
 
+    <!-- Nickname -->
 
+    <!-- Età -->
+
+    <!-- Ruolo -->
+
+    <!-- Bottone Salva -->
     <EditText
         android:id="@+id/nicknameEditText"
         android:layout_width="0dp"

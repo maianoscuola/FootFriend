@@ -12,16 +12,14 @@ import android.widget.Toast;
 import com.example.footfriend.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class HomeFragment extends Fragment {
 
-    private TextView textViewNome, textViewRuolo;
+    private TextView textViewNome, textViewRuolo, textViewLivello;
     private ProgressBar progressBarExp;
+    private FirebaseFirestore db;
+    private FirebaseAuth mAuth;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -29,7 +27,11 @@ public class HomeFragment extends Fragment {
 
         textViewNome = root.findViewById(R.id.textViewNome);
         textViewRuolo = root.findViewById(R.id.textViewRuolo);
+        textViewLivello = root.findViewById(R.id.textViewLivello);
         progressBarExp = root.findViewById(R.id.progressBarExp);
+
+        db = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
 
         loadUserData();
 
@@ -37,32 +39,51 @@ public class HomeFragment extends Fragment {
     }
 
     private void loadUserData() {
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null) {
             String userId = currentUser.getUid();
-            DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users").child(userId);
 
-            userRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot snapshot) {
-                    if (snapshot.exists()) {
-                        String nickname = snapshot.child("nickname").getValue(String.class);
-                        String ruolo = snapshot.child("ruolo").getValue(String.class);
-                        Long livello = snapshot.child("livello").getValue(Long.class);
+            db.collection("users").document(userId).get()
+                    .addOnSuccessListener(documentSnapshot -> {
+                        if (documentSnapshot.exists()) {
+                            String nickname = documentSnapshot.getString("nickname");
+                            String ruolo = documentSnapshot.getString("ruolo");
+                            Long exp = documentSnapshot.getLong("exp");
 
-                        textViewNome.setText(nickname != null ? nickname : "Nessun nickname");
-                        textViewRuolo.setText(ruolo != null ? ruolo : "Nessun ruolo");
-                        progressBarExp.setProgress(livello != null ? livello.intValue() : 0);
-                    } else {
-                        Toast.makeText(getContext(), "Utente non trovato", Toast.LENGTH_SHORT).show();
-                    }
-                }
+                            
+                            if (nickname != null) {
+                                textViewNome.setText(nickname);
+                            } else {
+                                textViewNome.setText("Nessun nickname");
+                                Toast.makeText(getContext(), "nessun nickname", Toast.LENGTH_SHORT).show();
+                            }
 
-                @Override
-                public void onCancelled(DatabaseError error) {
-                    Toast.makeText(getContext(), "Errore: " + error.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            });
+                            if (ruolo != null) {
+                                textViewRuolo.setText(ruolo);
+                            } else {
+                                textViewRuolo.setText("Nessun ruolo");
+                                Toast.makeText(getContext(), "nessun ruolo", Toast.LENGTH_SHORT).show();
+                            }
+
+                            if (exp != null) {
+                                int livello = (int) (exp / 15);
+                                int expNelLivello = (int) (exp % 15);
+                                textViewLivello.setText("Livello " + livello);
+                                progressBarExp.setMax(15);
+                                progressBarExp.setProgress(expNelLivello);
+                            } else {
+                                textViewLivello.setText("Livello 0");
+                                progressBarExp.setMax(15);
+                                progressBarExp.setProgress(0);
+                            }
+                        } else {
+                            Toast.makeText(getContext(), "Documento utente NON trovato!", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(getContext(), "Errore nel caricamento: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                        e.printStackTrace();
+                    });
         } else {
             Toast.makeText(getContext(), "Utente non loggato!", Toast.LENGTH_SHORT).show();
         }

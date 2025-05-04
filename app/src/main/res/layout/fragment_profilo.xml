@@ -8,42 +8,45 @@
     android:background="#ffffff">
 
     <TextView
-        android:id="@+id/textViewEmail"
+        android:id="@+id/text_email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Email"
+        android:text="Email: "
         android:textSize="20sp"
-        android:layout_marginBottom="8dp"
-        android:gravity="center_horizontal"/>
+        android:layout_marginBottom="8dp"/>
 
     <TextView
-        android:id="@+id/textViewNickname"
+        android:id="@+id/text_nickname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Nickname"
+        android:text="Nickname: "
         android:textSize="20sp"
-        android:layout_marginBottom="8dp"
-        android:gravity="center_horizontal"/>
+        android:layout_marginBottom="8dp"/>
 
     <TextView
-        android:id="@+id/textViewEta"
+        android:id="@+id/text_ruolo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Età"
+        android:text="Ruolo: "
         android:textSize="20sp"
-        android:layout_marginBottom="16dp"
-        android:gravity="center_horizontal"/>
+        android:layout_marginBottom="8dp"/>
+
+    <TextView
+        android:id="@+id/text_eta"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Età: "
+        android:textSize="20sp"
+        android:layout_marginBottom="24dp"/>
 
     <Button
-        android:id="@+id/buttonLogout"
+        android:id="@+id/button_logout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Logout"
         android:backgroundTint="#FF5722"
         android:textColor="#FFFFFF"
         android:padding="12dp"
-        android:textSize="18sp"
-        android:layout_marginTop="32dp"
-        android:gravity="center"/>
+        android:textSize="18sp"/>
 
 </LinearLayout>
