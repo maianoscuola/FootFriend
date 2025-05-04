@@ -20,7 +20,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 public class NotificationsFragment extends Fragment {
 
     private FragmentNotificationsBinding binding;
-    private TextView textViewEmail, textViewNickname, textViewEta;
+    private TextView textEmail, textNickname, textEta;
     private Button buttonLogout;
 
     private FirebaseAuth mAuth;
@@ -34,10 +34,11 @@ public class NotificationsFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
 
-        textViewEmail = root.findViewById(R.id.text_email);
-        textViewNickname = root.findViewById(R.id.text_nickname);
-        textViewEta = root.findViewById(R.id.text_eta);
-        buttonLogout = root.findViewById(R.id.button_logout);
+        // 🟢 CORREZIONE QUI: gli ID ora corrispondono al layout
+        textEmail = root.findViewById(R.id.textEmail);
+        textNickname = root.findViewById(R.id.textNickname);
+        textEta = root.findViewById(R.id.textEta);
+        buttonLogout = root.findViewById(R.id.buttonLogout);
 
         loadUserData();
 
@@ -54,7 +55,7 @@ public class NotificationsFragment extends Fragment {
     private void loadUserData() {
         FirebaseUser user = mAuth.getCurrentUser();
         if (user != null) {
-            textViewEmail.setText("Email: " + user.getEmail());
+            textEmail.setText("Email: " + user.getEmail());
 
             String uid = user.getUid();
             db.collection("users").document(uid).get()
@@ -63,8 +64,8 @@ public class NotificationsFragment extends Fragment {
                             String nickname = documentSnapshot.getString("nickname");
                             Long eta = documentSnapshot.getLong("eta");
 
-                            textViewNickname.setText("Nickname: " + (nickname != null ? nickname : "N/D"));
-                            textViewEta.setText("Età: " + (eta != null ? eta : "N/D"));
+                            textNickname.setText("Nickname: " + (nickname != null ? nickname : "N/D"));
+                            textEta.setText("Età: " + (eta != null ? eta : "N/D"));
                         } else {
                             Toast.makeText(getContext(), "Dati utente non trovati.", Toast.LENGTH_SHORT).show();
                         }
@@ -81,3 +82,4 @@ public class NotificationsFragment extends Fragment {
         binding = null;
     }
 }
+
