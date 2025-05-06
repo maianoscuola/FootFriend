@@ -35,7 +35,7 @@ public class DashboardFragment extends Fragment implements PartitaAdapter.OnPart
     private DatabaseReference databasePartite;
 
     public DashboardFragment() {
-        // Required empty public constructor
+
     }
 
     @Override
@@ -72,6 +72,7 @@ public class DashboardFragment extends Fragment implements PartitaAdapter.OnPart
                         listaPartite.add(partita);
                     }
                 }
+
                 adapter.notifyDataSetChanged();
             }
 

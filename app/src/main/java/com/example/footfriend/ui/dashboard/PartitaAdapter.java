@@ -61,7 +61,7 @@ public class PartitaAdapter extends RecyclerView.Adapter<PartitaAdapter.PartitaV
             super(itemView);
             textLuogo = itemView.findViewById(R.id.textLuogo);
             textCreatore = itemView.findViewById(R.id.textCreatore);
-            //textMaxPartecipanti = itemView.findViewById(R.id.textMaxPartecipanti);
+            textMaxPartecipanti = itemView.findViewById(R.id.textMaxPartecipanti);
             textPostiRimanenti = itemView.findViewById(R.id.textPosti);
             textOrario = itemView.findViewById(R.id.textOrario);
             btnPartecipa = itemView.findViewById(R.id.buttonPartecipa);
