@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,8 +73,19 @@ public class DashboardFragment extends Fragment implements PartitaAdapter.OnPart
                         listaPartite.add(partita);
                     }
                 }
-
+                Log.d("DASHBOARD", "Numero di partite trovate: " + listaPartite.size());
                 adapter.notifyDataSetChanged();
+                if (listaPartite.isEmpty()) {
+                    DatabaseReference nuovaPartitaRef = databasePartite.push();
+                    Partita partitaTest = new Partita("Campo Sportivo Test", "CreatoreTest", 10, 10, "18:00");
+                    nuovaPartitaRef.setValue(partitaTest).addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            Log.d("DASHBOARD", "Partita di test creata con successo!");
+                        } else {
+                            Log.d("DASHBOARD", "Errore nella creazione della partita di test.");
+                        }
+                    });
+                }
             }
 
             @Override
